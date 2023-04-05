@@ -5,6 +5,10 @@
 
 namespace jamesiarmes\PhpNtlm;
 
+use BadMethodCallException;
+use CurlHandle;
+use RuntimeException;
+
 /**
  * Soap Client using Microsoft's NTLM Authentication.
  *
@@ -15,16 +19,16 @@ class SoapClient extends \SoapClient
     /**
      * cURL resource used to make the SOAP request
      *
-     * @var resource
+     * @var CurlHandle
      */
-    protected $ch;
+    protected CurlHandle $ch;
 
     /**
      * Options passed to the client constructor.
      *
      * @var array
      */
-    protected $options;
+    protected array $options;
 
     /**
      * {@inheritdoc}
@@ -57,7 +61,7 @@ class SoapClient extends \SoapClient
 
         // Verify that a user name and password were entered.
         if (empty($options['user']) || empty($options['password'])) {
-            throw new \BadMethodCallException(
+            throw new BadMethodCallException(
                 'A username and password is required.'
             );
         }
@@ -68,7 +72,7 @@ class SoapClient extends \SoapClient
     /**
      * {@inheritdoc}
      */
-    public function __doRequest($request, $location, $action, $version, $one_way = 0)
+    public function __doRequest($request, $location, $action, $version, $one_way = 0): null|string
     {
         $headers = $this->buildHeaders($action);
         $this->__last_request = $request;
@@ -88,7 +92,7 @@ class SoapClient extends \SoapClient
         // an exception.
         if ($response === false) {
             $this->__last_response = $this->__last_response_headers = false;
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 'Curl error: ' . curl_error($this->ch),
                 curl_errno($this->ch)
             );
@@ -103,7 +107,7 @@ class SoapClient extends \SoapClient
     /**
      * {@inheritdoc}
      */
-    public function __getLastRequestHeaders()
+    public function __getLastRequestHeaders(): null|string
     {
         return implode("\n", $this->__last_request_headers) . "\n";
     }
@@ -113,13 +117,13 @@ class SoapClient extends \SoapClient
      *
      * @return integer
      *
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      *   If no cURL resource has been initialized.
      */
     public function getResponseCode()
     {
         if (empty($this->ch)) {
-            throw new \BadMethodCallException('No cURL resource has been '
+            throw new BadMethodCallException('No cURL resource has been '
                 . 'initialized. This is probably because no request has not '
                 . 'been made.');
         }
@@ -159,7 +163,7 @@ class SoapClient extends \SoapClient
         // Strip invalid characters from the XML response body.
         $count = 0;
         $this->__last_response = preg_replace(
-            '/(?!&#x0?(9|A|D))(&#x[0-1]?[0-9A-F];)/',
+            '/(?!&#x0?([9AD]))(&#x[0-1]?[0-9A-F];)/',
             ' ',
             $this->__last_response,
             -1,

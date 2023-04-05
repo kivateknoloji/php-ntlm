@@ -1,6 +1,8 @@
 PHP NTLM
 ===================================
 
+REASON TO FORK: Added php8.1 support
+
 The PHP NTLM library (php-ntlm) is intended to provide various methods to aid in
 communicating with Microsoft services that utilize NTLM authentication from
 within PHP.
@@ -12,7 +14,7 @@ Dependencies
 ------------
 
  * Composer
- * PHP 5.4 or greater
+ * PHP 8.1 or greater
  * cURL with NTLM support (7.23.0+ recommended)
 
 Installation
