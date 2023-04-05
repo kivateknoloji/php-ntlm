@@ -21,7 +21,7 @@ class SoapClient extends \SoapClient
      *
      * @var CurlHandle
      */
-    protected CurlHandle $ch;
+    protected $ch;
 
     /**
      * Options passed to the client constructor.
