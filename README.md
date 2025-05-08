@@ -1,8 +1,6 @@
 PHP NTLM
 ===================================
 
-REASON TO FORK: Added php8.1 support
-
 The PHP NTLM library (php-ntlm) is intended to provide various methods to aid in
 communicating with Microsoft services that utilize NTLM authentication from
 within PHP.
